@@ -25,7 +25,7 @@ app.use( express.static( "public" ) );
 
 
 app.get('/',(req,res) => {
-    res.sendFile(path.join(__dirname,'./public/registration.html'));
+    res.render('index');
 });
 
 app.get("/home",  (req, res) => {
@@ -33,6 +33,15 @@ app.get("/home",  (req, res) => {
     });
 
 
+        app.get("/register",  (req, res) => {
+            res.render("registration");
+            });
+
+
+
+app.get("/login", (req, res) => {
+    res.render("login");
+    });
 
 app.post('/register', async (req, res) => {
     try{
@@ -49,8 +58,9 @@ app.post('/register', async (req, res) => {
             };
             users.push(newUser);
             console.log('User list', users);
-    
-            res.send("<div align ='center'><h2>Registration successful</h2></div><br><br><div align='center'><a href='./login.html'>login</a></div><br><br><div align='center'><a href='./registration.html'>Register another user</a></div>");
+
+            res.redirect('./login');
+
         } else {
             res.send("<div align ='center'><h2>Email already used</h2></div><br><br><div align='center'><a href='./registration.html'>Register again</a></div>");
         }
