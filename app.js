@@ -9,16 +9,27 @@ const users = require('./data').userDB;
 const app = express();
 const server = http.createServer(app);
 
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "public"));
+
+
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static(path.join(__dirname,'./public')));
 
+app.use(express.urlencoded());
+app.use(express.static(path.join(__dirname, "assets")));
+app.use(express.json());
+app.use( express.static( "public" ) );
+// app.use(cookieParser());
+
 
 app.get('/',(req,res) => {
-    res.sendFile(path.join(__dirname,'./public/index.html'));
+    res.sendFile(path.join(__dirname,'./public/registration.html'));
 });
 
 app.get("/home",  (req, res) => {
-    res.sendFile(path.join(__dirname,'./public/home.html'));
+    res.render("home");
     });
 
 
@@ -58,8 +69,9 @@ app.post('/login', async (req, res) => {
     
             const passwordMatch = await bcrypt.compare(submittedPass, storedPass);
             if (passwordMatch) {
-                let usrname = foundUser.username;
-                res.send("<div align ='center'><h2>login successful</h2></div><br><br><br><div align ='center'><h3>Hello ${usrname}</h3></div><br><br><div align='center'><a href='./login.html'>logout</a></div>");
+                let username = foundUser.username;
+                // res.send("<div align ='center'><h2>login successful</h2></div><br><br><br><div align ='center'><h3>Hello ${usrname}</h3></div><br><br><div align='center'><a href='./home'>Continue</a><br><a href='./login.html'>logout</a></div>");
+                res.redirect('/home');
             } else {
                 res.send("<div align ='center'><h2>Incorrect password</h2></div><br><br><div align='center'><a href='./login.html'>login again</a></div><div align='center'><a href='./home.html'>Home</a></div>");
             }
